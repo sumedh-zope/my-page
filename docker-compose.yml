@@ -4,7 +4,13 @@ services:
   my-links-page:
     build: .
     container_name: my-links-page
+    networks:
+      - cloud
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  cloud:
+    external: true
 
