@@ -1,0 +1,24 @@
+name: Deploy to Portainer
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Trigger Portainer Webhook
+        run: |
+          curl -X POST https://portainer.zope.co.in/api/stacks/webhooks/85f869a4-ca12-438d-a36c-1af3d024490f
+          
+      - name: Wait for deployment
+        run: sleep 10
+        
+      - name: Deployment complete
+        run: |
+          echo "✅ Portainer webhook triggered successfully!"
+          echo "🚀 Your stack is being redeployed..."
+
