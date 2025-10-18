@@ -1,12 +1,15 @@
 const express = require('express');
 const redis = require('redis');
+const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
 const PORT = 3000;
 
-// Serve static files (HTML, CSS, images)
-app.use(express.static(__dirname));
+// Serve static files (CSS, images, etc.) - but NOT HTML
+app.use(express.static(__dirname, {
+    index: false // Don't serve index.html automatically
+}));
 
 // Redis client setup
 const redisConfig = {
@@ -34,47 +37,28 @@ redisClient.on('connect', () => {
     console.log('Connected to Redis successfully');
 });
 
-// Health check endpoint
+// Health check endpoint (internal only - not exposed publicly)
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Visitor counter endpoint - increment and return count
-app.get('/api/visitors', async (req, res) => {
+// Main route - serve HTML with embedded visitor count (no API calls needed)
+app.get('/', async (req, res) => {
     try {
         // Increment the visitor count
         const count = await redisClient.incr('page_visitors');
         
-        res.json({
-            success: true,
-            count: count,
-            timestamp: new Date().toISOString()
-        });
-    } catch (error) {
-        console.error('Error incrementing visitor count:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to update visitor count'
-        });
-    }
-});
-
-// Get current count without incrementing
-app.get('/api/visitors/count', async (req, res) => {
-    try {
-        const count = await redisClient.get('page_visitors');
+        // Read the HTML template
+        const htmlTemplate = await fs.readFile(path.join(__dirname, 'index.html'), 'utf-8');
         
-        res.json({
-            success: true,
-            count: parseInt(count) || 0,
-            timestamp: new Date().toISOString()
-        });
+        // Replace placeholder with actual count
+        const html = htmlTemplate.replace('{{VISITOR_COUNT}}', count.toLocaleString());
+        
+        res.setHeader('Content-Type', 'text/html');
+        res.send(html);
     } catch (error) {
-        console.error('Error getting visitor count:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to get visitor count'
-        });
+        console.error('Error serving page:', error);
+        res.status(500).send('Error loading page');
     }
 });
 
