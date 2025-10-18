@@ -9,6 +9,8 @@ services:
     networks:
       - cloud
     restart: unless-stopped
+    depends_on:
+      - backend
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
