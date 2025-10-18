@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  my-links-page:
+    build: .
+    container_name: my-links-page
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
