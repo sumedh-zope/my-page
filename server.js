@@ -1,12 +1,12 @@
 const express = require('express');
 const redis = require('redis');
-const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const PORT = 3000;
 
-// Enable CORS
-app.use(cors());
+// Serve static files (HTML, CSS, images)
+app.use(express.static(__dirname));
 
 // Redis client setup
 const redisConfig = {

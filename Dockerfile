@@ -1,16 +1,23 @@
-# Use nginx alpine for a lightweight image
-FROM nginx:alpine
+# Use Node.js Alpine for a lightweight image
+FROM node:18-alpine
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Set working directory
+WORKDIR /app
 
-# Copy the HTML and CSS files to nginx html directory
-COPY index.html /usr/share/nginx/html/
-COPY style.css /usr/share/nginx/html/
+# Copy package files
+COPY package.json ./
 
-# Expose port 80
-EXPOSE 80
+# Install dependencies
+RUN npm install --production
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Copy application files
+COPY server.js ./
+COPY index.html ./
+COPY style.css ./
+COPY sumedh.jpg ./
 
+# Expose port 3000
+EXPOSE 3000
+
+# Start the server
+CMD ["npm", "start"]

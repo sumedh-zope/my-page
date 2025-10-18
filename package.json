@@ -1,7 +1,7 @@
 {
-  "name": "my-links-api",
+  "name": "my-links-page",
   "version": "1.0.0",
-  "description": "Visitor counter API for my links page",
+  "description": "Personal links page with visitor counter",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -11,8 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
-    "redis": "^4.6.7",
-    "cors": "^2.8.5"
+    "redis": "^4.6.7"
   }
 }
 

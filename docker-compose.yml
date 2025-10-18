@@ -1,24 +1,9 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  web:
+    build: .
     container_name: my-links-page
-    networks:
-      - cloud
-    restart: unless-stopped
-    depends_on:
-      - backend
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.api
-    container_name: my-links-api
     environment:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
