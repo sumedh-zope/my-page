@@ -4,8 +4,6 @@ services:
   my-links-page:
     build: .
     container_name: my-links-page
-    ports:
-      - "8080:80"
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
