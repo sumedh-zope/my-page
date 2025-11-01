@@ -29,33 +29,63 @@ Simply open `index.html` in your browser to preview the page locally.
 
 ## Docker Deployment 🐳
 
-### Option 1: Using Docker CLI
+### Prerequisites
+
+1. **Start Docker Desktop** (make sure Docker daemon is running)
+2. **Ensure Redis is available** (or use the standalone compose file that includes Redis)
+
+### Option 1: Standalone Deployment (with Redis)
+
+This is the easiest option for local/testing deployment. It includes Redis:
+
+```bash
+docker-compose -f docker-compose.standalone.yml up -d
+```
+
+This will:
+- Build and start the web application
+- Start a Redis container
+- Expose the app on port 3000
+
+Access your page at: http://localhost:3000
+
+To stop:
+```bash
+docker-compose -f docker-compose.standalone.yml down
+```
+
+### Option 2: Production Deployment (external Redis)
+
+For production with an existing Redis instance on the `cloud` network:
+
+```bash
+# Ensure the 'cloud' network exists
+docker network create cloud
+
+# Deploy using docker-compose
+docker-compose up -d
+```
+
+Access your page at: http://localhost:3000
+
+### Option 3: Using Docker CLI
 
 Build the Docker image:
 ```bash
 docker build -t my-links-page .
 ```
 
-Run the container:
+Run the container (assuming Redis is available at 'redis:6379'):
 ```bash
-docker run -d -p 8080:80 --name my-links-page my-links-page
+docker run -d -p 3000:3000 \
+  -e REDIS_HOST=redis \
+  -e REDIS_PORT=6379 \
+  --network cloud \
+  --name my-links-page \
+  my-links-page
 ```
 
-Access your page at: http://localhost:8080
-
-### Option 2: Using Docker Compose
-
-Build and run with docker-compose:
-```bash
-docker-compose up -d
-```
-
-Stop the container:
-```bash
-docker-compose down
-```
-
-Access your page at: http://localhost:8080
+Access your page at: http://localhost:3000
 
 ## Deploying to Portainer 🚢
 
@@ -112,17 +142,21 @@ Access your page at: http://localhost:8080
 
 ## Environment Variables 🔧
 
-The current setup doesn't use environment variables, but you can extend it by:
-- Creating a config file that gets mounted
-- Using environment variables to inject content dynamically
+The following environment variables can be set:
+
+- `REDIS_HOST`: Redis hostname (default: `redis`)
+- `REDIS_PORT`: Redis port (default: `6379`)
+- `REDIS_PASSWORD`: Redis password (optional)
+
+You can set these in `stack.env` or via docker-compose environment section.
 
 ## Port Configuration 🔌
 
-By default, the application runs on port 80 inside the container and is mapped to port 8080 on the host.
+By default, the application runs on port 3000 inside the container and is mapped to port 3000 on the host.
 
 To change the host port, modify:
-- In `docker-compose.yml`: change `"8080:80"` to `"YOUR_PORT:80"`
-- In docker run command: change `-p 8080:80` to `-p YOUR_PORT:80`
+- In `docker-compose.yml`: change `"3000:3000"` to `"YOUR_PORT:3000"`
+- In docker run command: change `-p 3000:3000` to `-p YOUR_PORT:3000`
 
 ## Updating Your Page 🔄
 
@@ -143,13 +177,14 @@ Or with Docker CLI:
 docker build -t my-links-page .
 docker stop my-links-page
 docker rm my-links-page
-docker run -d -p 8080:80 --name my-links-page my-links-page
+docker run -d -p 3000:3000 --name my-links-page my-links-page
 ```
 
 ## Technical Stack 🛠️
 
 - **Frontend:** HTML5, CSS3
-- **Web Server:** Nginx (Alpine Linux)
+- **Backend:** Node.js, Express
+- **Database:** Redis (for visitor counter)
 - **Container:** Docker
 
 ## File Structure 📁

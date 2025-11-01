@@ -117,6 +117,32 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     background: white;
+    color: white;
+}
+
+/* Brand-specific hover colors */
+.link-button.github:hover {
+    background: #24292e;
+}
+
+.link-button.linkedin:hover {
+    background: #0077b5;
+}
+
+.link-button.twitter:hover {
+    background: #000000;
+}
+
+.link-button.instagram:hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.link-button.email:hover {
+    background: #ea4335;
+}
+
+.link-button.youtube:hover {
+    background: #ff0000;
 }
 
 .link-button:active {
