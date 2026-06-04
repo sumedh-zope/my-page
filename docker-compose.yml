@@ -17,7 +17,7 @@ services:
       - 'traefik.http.routers.website.rule=Host(`s8e.in`)'
       - 'traefik.http.routers.website.entrypoints=websecure'
       - 'traefik.http.routers.website.tls.certresolver=cloudflare'
-      - 'traefik.http.services.website.loadbalancer.server.port=PORT'
+      - 'traefik.http.services.website.loadbalancer.server.port=80'
 
 networks:
   cloud:
