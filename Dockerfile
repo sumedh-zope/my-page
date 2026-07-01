@@ -15,6 +15,7 @@ COPY server.js ./
 COPY index.html ./
 COPY style.css ./
 COPY sumedh.jpg ./
+COPY favicon.ico ./
 
 # Expose port 3000
 EXPOSE 3000
